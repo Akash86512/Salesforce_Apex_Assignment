@@ -1,0 +1,26 @@
+public class IsGold {
+	
+    public static void amountField(List<Opportunity> opp)
+    {
+        List<Id> idList=new List<Id>();
+        
+        for(opportunity op:opp)
+        {
+            if(op.Amount>20000 && op.AccountId!=null)
+            {
+                idList.add(op.AccountId);
+            }
+        }
+        
+        List<Account> acct=new List<Account>([Select Id from Account where id in:idList]);
+        List<Account> ac=new List<Account>();
+        
+        for(Account a:ac)
+        {
+            a.is_gold__c=true;
+            ac.add(a);
+        }
+        
+        update ac;
+    }
+}
