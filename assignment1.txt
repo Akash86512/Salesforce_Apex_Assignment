@@ -1,0 +1,35 @@
+ 1. Create a field on Account called “is_gold”, checkbox, default off
+    
+    When Amount field on Opportunity  is greater than $20k, mark is_gold to TRUE.
+
+
+Code:- 
+
+
+
+trigger MarkCheckbox on Opportunity (before insert) {
+    List<Id> idlist=new List<Id>();
+    
+    for(Opportunity opp:trigger.new)
+    {
+        if(opp.Amount>20000 && opp.AccountId!=null)
+        {
+            idlist.add(opp.AccountId);
+        }
+    }
+    
+     List<Account> ac=new List<Account>([Select Id form Account where Id IN :idlist]);
+     List<Account> act=new List<Account>();
+    
+    for(Account a:ac)
+    {
+        a.is_gold__c=TRUE;
+        act.add(a);
+        
+    }
+	update act;
+    
+	
+    
+}
+
