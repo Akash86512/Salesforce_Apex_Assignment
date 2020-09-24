@@ -1,0 +1,75 @@
+3.Create a field on Account called “Only_Default_Contact”, checkbox, default off
+
+  When a new Account is created, create a new Contact that has the following data points:
+  First Name = “Info”
+  Last Name = “Default”
+  Email = “info@websitedomain.tld”
+  Only_Default_Contact = TRUE
+  When the Account has more than 1 Contact, update Only_Default_Contact to FALSE.
+
+Code:-
+
+trigger CreateContact on Account (after insert) {
+
+    List<Contact> contactList=new List<Contact>();
+    for(Account ac:trigger.new)
+    {
+        Contact con=new Contact(LastName='info',FirstName='Info',
+                                Email='info@'+ac.Website,AccountId=ac.Id);
+        
+        contactList.add(con);
+    }
+    
+    if(!contactList.isEmpty())
+    {
+        insert contactList;
+    }
+    
+}
+
+
+
+
+
+trigger UpdateAccount on Contact (after insert,after update) {
+
+    List<Id> acct=new List<Id>();
+    
+    for(Contact con:trigger.new)
+    {
+        acct.add(con.AccountId);
+    }
+    
+    List<Contact> cnt=new List<Contact>([Select Id from Contact where AccountId IN:acct]);
+    
+    Integer totalcount=cnt.size();
+    
+    List<Account> accounts=new List<Account>([Select Id from Account where Id IN:acct]);
+    
+    if(totalcount==1)
+    {
+        List<Account> act1=new List<Account>();
+        for(Account act:accounts)
+        {
+            act.Only_Default_Contact__c=True;
+            act1.add(act);
+            
+        }
+        update act1;
+    }else if(totalcount>1)
+    {
+        List<Account> act2=new List<Account>();
+        
+        for(Account act:accounts)
+        {
+            act.Only_Default_Contact__c=False;
+            act2.add(act);
+            
+        }
+        update act2;
+    }
+}
+
+
+
+
