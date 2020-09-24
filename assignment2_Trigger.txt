@@ -1,0 +1,40 @@
+2.Create a field on Contact called Profile, text, 255
+
+ When an Account is updated and the Website is filled in, update the Profile field on all Contacts to:
+ Profile = Website + ‘/’ + First Letter of First Name + Last Name
+
+
+Code:-
+
+trigger Updateprofile on Account (after update) {
+    
+    List<Account> changeAccList=new List<Account>();
+    
+    for(Account ac:Trigger.new)
+    {
+        if(ac.Website!=Null&& ac.Website!=trigger.oldMap.get(ac.Id).Website)
+        {
+            changeAccList.add(ac);
+        }
+    }
+
+     List<Contact> con=new List<Contact>();    
+
+    for(Contact contact:[Select Id,FirstName,LastName,Account.Id,Account.Website from Contact where Account.Id IN:changeAccList])
+    {
+        if(contact.FirstName!=null)
+        {
+            contact.profile__c=contact.Account.Website+'/'+contact.FirstName.left(1)+contact.LastName;
+            System.debug(contact.profile__c);
+ 	    con.add(contact);
+           
+        }
+        
+    }
+	 update con;
+
+}
+
+
+
+  
