@@ -1,0 +1,28 @@
+public class UpdateAccount {
+
+    public static void updateWebsitefield(List<Account> accList)
+    {
+        List<Id> idList=new List<Id>();
+        List<Contact> conList=new List<Contact>();
+        
+        for(Account acc:accList)
+        {
+            if(Account.Website!=null)
+            {
+                idList.add(acc.Id);
+            }
+            
+            List<Contact> Contact_List = [select Id,Firstname,Lastname,Profile__c,Accountid,Account.website from contact where Accountid in :idlist];
+                
+            
+            for(Contact con : Contact_List)
+              {
+                    con.Profile__c=account.website+'/'+con.Firstname+con.Lastname;
+                    System.debug('Value of profile field in contact is updated');
+               
+                conList.add(con);
+            }
+        }
+        update conList;
+    }
+}
