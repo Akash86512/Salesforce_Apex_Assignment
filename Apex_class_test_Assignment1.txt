@@ -1,0 +1,14 @@
+@IsTest
+public class TestGold {
+@isTest
+    public static void testclass()
+    {
+        Account ac=new Account(Name='Test Class');
+        Opportunity opp=new Opportunity(Name='Oppu class',AccountId=ac.Id,CloseDate=Date.newInstance(2020, 	09, 30),Amount=20000,StageName='Prospecting');
+        insert opp;
+        Test.startTest();
+        opp.Amount=89845;
+        Update opp;
+        Test.stopTest();
+    }
+}
