@@ -1,0 +1,18 @@
+@IsTest
+public class TestUpdateAccount {
+
+     @isTest
+    public  static void ProfileUpdate(){
+        Account oldAcc = new Account(Name='Profile');
+        insert oldAcc;
+        Contact oldCon=new Contact(FirstName='Yashi',LastName='Prabhu',AccountId=oldAcc.Id);
+        insert oldCon;
+        Test.startTest();
+        oldAcc.Website='www.gmail.com';
+        update oldAcc;
+        Test.stopTest();
+        
+    }
+    
+    
+}
