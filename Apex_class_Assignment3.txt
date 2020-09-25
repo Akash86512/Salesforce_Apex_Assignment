@@ -1,0 +1,27 @@
+public class HandlerDefaultContact {
+    
+    public static void newContactCreate(List<Account> accList){
+        List<Contact> conList=new List<Contact>();
+        for(Account AccountList:accList){
+            conList.add(new Contact(LastName='Default',FirstName='Info',Email='info@websitedomain.tld',AccountId=AccountList.Id));
+        }
+        if(conList.size()>0){
+             insert conList; 
+        }
+      
+    }
+
+    public static void UpdateAccount(List<Contact> conList){
+        Set<Id> accountIds=new Set<Id>();
+        for(Contact con: conList){
+            accountIds.add(con.AccountId);
+        }
+        List<Account> updateAccount= new List<Account>();
+        for(AggregateResult ar : [select count(id) , AccountId from Contact where AccountId IN :accountIds group by AccountId having count(id)  >1 ]){
+            updateAccount.add(new Account(Id = (Id)ar.get('AccountId'), Only_Default_Contact__c=false));
+        }
+        if(updateAccount.size()>0){
+            update updateAccount;
+        }
+    }
+}
